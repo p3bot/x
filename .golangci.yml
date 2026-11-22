@@ -1,0 +1,28 @@
+version: "2"
+
+linters:
+  default: standard
+  enable:
+    - errorlint
+    - exhaustive
+    - gocritic
+    - misspell
+    - revive
+    - unconvert
+    - unparam
+  settings:
+    exhaustive:
+      default-signifies-exhaustive: false
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/p3bot/x
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
