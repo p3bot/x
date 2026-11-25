@@ -18,6 +18,11 @@ clikit packages:
 | `clikit/fault` | Exit code constants, the error and warning payloads, the canonical error-code table, the coded-error interfaces, and `fault.ExitCode(err)` for `main` |
 | `clikit/mode` | Detection of interactive, decorated, animated, and debug modes from flags and the environment, and the colour switch for `fatih/color` |
 | `clikit/output` | An `Output` value per invocation that writes results, errors, warnings, notices, hints, and progress in text or JSON |
+| `clikit/interrupt` | `interrupt.Run` for `main`: a context cancelled by SIGINT or SIGTERM, a second signal that kills, and the 128+signum exit code |
+| `clikit/duration` | Parse and format the duration grammar (`30s`, `1h30m`, `7d`, `0`), and a flag value for cobra/pflag |
+| `clikit/version` | The reported version from a CLI's ldflags value or the module build info, plus the VCS revision and time for diagnostics |
+| `clikit/xdg` | Per-user config, data, state, and cache directories with macOS defaults, and system config lookup across `$XDG_CONFIG_DIRS` |
+| `clikit/atomicfile` | Replace a file through a temp file and rename, so readers never see a partial write |
 
 ## Using a module
 
@@ -36,6 +41,14 @@ func (e lockedError) Error() string { return e.branch + " is locked" }
 func (e lockedError) Code() string  { return "BRANCH_LOCKED" }
 func (e lockedError) Fix() string   { return "mycli unlock " + e.branch }
 func (e lockedError) ExitCode() int { return 5 }
+```
+
+A CLI's `main` hands the signal-aware run to `fault.ExitCode`, which decides the exit code for errors and signals alike:
+
+```go
+func main() {
+	os.Exit(fault.ExitCode(interrupt.Run(cli.Execute)))
+}
 ```
 
 ## Versions and tags

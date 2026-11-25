@@ -6,7 +6,7 @@ Multi-module Go repository of library modules imported by the p3bot CLIs. Librar
 
 | Path | Contents |
 | --- | --- |
-| `clikit/` | Module `github.com/p3bot/x/clikit`: packages `fault`, `mode`, `output` |
+| `clikit/` | Module `github.com/p3bot/x/clikit`: packages `fault`, `mode`, `output`, `interrupt`, `duration`, `version`, `xdg`, `atomicfile` |
 | `skill/` | Module `github.com/p3bot/x/skill` (not yet created) |
 | `.golangci.yml` | golangci-lint v2 config shared by every module |
 
@@ -22,6 +22,7 @@ GOWORK=off CGO_ENABLED=0 go test ./...
 GOWORK=off go test -race ./...
 GOWORK=off golangci-lint run ./...
 GOWORK=off GOOS=windows go vet ./...
+GOWORK=off GOOS=darwin go vet ./...
 GOWORK=off go mod tidy
 ```
 
@@ -52,5 +53,8 @@ No module imports cobra, pflag, agentdex, or any CLI repository. Adding anything
 
 - Pure Go, no cgo. Must compile for linux, darwin, and windows
 - No package-level mutable state in `output`. A CLI builds one `Output` per invocation
+- `interrupt` holds no package state; `fault.ExitCode` stays the single exit decision `main` makes
+- Injected process state (`mode.Env`, `xdg.Env`) has a hermetic zero value; `ProcessEnv()` returns the running process
+- `atomicfile` never creates directories; the caller (or `xdg.Ensure`) does
 - Text output, error rendering, and field selection get the design and test effort; keep the JSON envelope minimal
 - MPL-2.0. Scoped Commits messages. No `Co-Authored-By` trailers
