@@ -9,7 +9,7 @@ Each module lives in its own directory with its own `go.mod` and is versioned in
 | Module | Import path | Purpose |
 | --- | --- | --- |
 | clikit | `github.com/p3bot/x/clikit` | The tool-agnostic parts of the p3bot CLI design: exit codes and error payloads, runtime modes, and output |
-| skill | `github.com/p3bot/x/skill` | The agent catalog and installed-agent detection; agent skill install, list, and uninstall (planned) |
+| skill | `github.com/p3bot/x/skill` | Agent skill install, list, and uninstall for a CLI, on top of the agent catalog and installed-agent detection |
 
 clikit packages:
 
@@ -28,6 +28,7 @@ skill packages:
 
 | Package | What it provides |
 | --- | --- |
+| `skill` | A CLI's agent skill built from its embedded `SKILL.md`: install into, list, and uninstall from agent skills roots, touching only copies the CLI owns, with coded errors (`AGENT_UNKNOWN`, `NO_SKILLS_CONCEPT`, `NO_SKILLS_ROOT`, `NO_AGENTS`, `CONFLICT`) |
 | `skill/catalog` | The known AI coding agents (binary, config directories, skills roots, providers) from an embedded `agents.json`, and detection of which are installed with their paths resolved |
 
 The catalog is `skill/catalog/agents.json`, edited by hand and validated by the package tests. It needs no network, no CUE, and no first-run fetch. While start still reads the agentdex registry catalog, `agents.json` is frozen: it must stay equivalent to agentdex's `catalog/agents.cue`, and neither file is edited.
@@ -56,6 +57,28 @@ A CLI's `main` hands the signal-aware run to `fault.ExitCode`, which decides the
 ```go
 func main() {
 	os.Exit(fault.ExitCode(interrupt.Run(cli.Execute)))
+}
+```
+
+A CLI's skill commands are thin calls into `skill`. Its errors already carry their code and fix, so the CLI's error boundary passes them through:
+
+```go
+//go:embed skill.md
+var skillText string
+
+func runSkillInstall(cmd *cobra.Command, args []string) error {
+	s, err := skill.New("mycli", skillText)
+	if err != nil {
+		return err
+	}
+	// An unreadable home or working directory leaves its roots unresolved,
+	// which Install reports as NO_SKILLS_ROOT.
+	env, _ := catalog.ProcessEnv()
+	written, err := s.Install(env, skill.Global, args)
+	for _, path := range written {
+		fmt.Fprintln(cmd.OutOrStdout(), path)
+	}
+	return err
 }
 ```
 

@@ -7,7 +7,7 @@ Multi-module Go repository of library modules imported by the p3bot CLIs. Librar
 | Path | Contents |
 | --- | --- |
 | `clikit/` | Module `github.com/p3bot/x/clikit`: packages `fault`, `mode`, `output`, `interrupt`, `duration`, `version`, `xdg`, `atomicfile` |
-| `skill/` | Module `github.com/p3bot/x/skill`: package `catalog` (agent catalog and detection); the lifecycle package at the module root is not yet built |
+| `skill/` | Module `github.com/p3bot/x/skill`: package `skill` at the module root (install, list, and uninstall of a CLI's agent skill, with coded errors) and package `catalog` (agent catalog and detection) |
 | `.golangci.yml` | golangci-lint v2 config shared by every module |
 
 There is no module at the repository root. Each module declares `go 1.27`. `go.work` is gitignored; never commit one.
@@ -46,6 +46,8 @@ Warning: catalog freeze. Until start reads `skill/catalog` instead of the agentd
 
 A module is released with a `<module>/vX.Y.Z` tag, for example `clikit/v0.1.0`. The `v` is required. From v2 the module path gains `/v2` and tags stay `clikit/v2.x.y`. Both modules stay on v0 until three CLIs have migrated.
 
+Release order across modules: a change skill needs from clikit is tagged in clikit first, then skill's `go.mod` requirement is bumped to that tag, then skill is tagged. skill uses clikit at runtime only for `atomicfile` (`fault` is a test dependency), so a change to `fault`, `mode`, or `output` never forces a skill release while the coded-error interfaces stay frozen.
+
 ## Dependencies
 
 | Module | Allowed |
@@ -62,5 +64,6 @@ No module imports cobra, pflag, agentdex, or any CLI repository. Adding anything
 - `interrupt` holds no package state; `fault.ExitCode` stays the single exit decision `main` makes
 - Injected process state (`mode.Env`, `xdg.Env`, `catalog.Env`) has a hermetic zero value; `ProcessEnv()` returns the running process
 - `atomicfile` never creates directories; the caller (or `xdg.Ensure`) does
+- `skill` never imports `clikit/fault` outside its tests and has no code-mapping function: its errors carry codes through fault's interfaces, and its tests assert the payloads through `fault.Payload`
 - Text output, error rendering, and field selection get the design and test effort; keep the JSON envelope minimal
 - MPL-2.0. Scoped Commits messages. No `Co-Authored-By` trailers
