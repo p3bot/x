@@ -60,20 +60,39 @@ func main() {
 }
 ```
 
-A CLI's skill commands are thin calls into `skill`. Its errors already carry their code and fix, so the CLI's error boundary passes them through:
+A CLI's skill commands are thin calls into `skill`. Its errors already carry their code and fix, so the CLI's error boundary passes them through.
+
+`catalog.ProcessEnv` reports a home or working directory it cannot read and leaves that field empty. `skill` skips the roots it cannot resolve, so `List` and `Uninstall` would then succeed with nothing. Install, list, and uninstall each build their `Env` through a check that the directory their location needs is there: the home directory for `skill.Global`, the working directory for `skill.Local`.
 
 ```go
 //go:embed skill.md
 var skillText string
+
+// skillEnv returns the process Env, or an error when the directory that holds
+// the skills roots of loc is unusable. The other directory may be missing.
+func skillEnv(loc skill.Location) (catalog.Env, error) {
+	env, err := catalog.ProcessEnv()
+	name, dir := "home", env.Home
+	if loc == skill.Local {
+		name, dir = "working", env.WorkingDir
+	}
+	if !filepath.IsAbs(dir) {
+		missing := fmt.Errorf("%v skills roots need an absolute %s directory, got %q", loc, name, dir)
+		return env, errors.Join(missing, err)
+	}
+	return env, nil
+}
 
 func runSkillInstall(cmd *cobra.Command, args []string) error {
 	s, err := skill.New("mycli", skillText)
 	if err != nil {
 		return err
 	}
-	// An unreadable home or working directory leaves its roots unresolved,
-	// which Install reports as NO_SKILLS_ROOT.
-	env, _ := catalog.ProcessEnv()
+	// skill list and skill uninstall start with the same call.
+	env, err := skillEnv(skill.Global)
+	if err != nil {
+		return err
+	}
 	written, err := s.Install(env, skill.Global, args)
 	for _, path := range written {
 		fmt.Fprintln(cmd.OutOrStdout(), path)

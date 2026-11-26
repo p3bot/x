@@ -3,8 +3,9 @@
 //
 // A CLI builds one Skill from its embedded SKILL.md with New and calls
 // Install, List, and Uninstall from its skill commands. The package touches
-// only copies it owns: a copy is owned when <root>/<id>/SKILL.md is a regular
-// file whose frontmatter name is the skill id. Failures in agent selection,
+// only copies it owns: a copy is owned when <root>/<id> is a real directory,
+// not a symbolic link, and <root>/<id>/SKILL.md is a regular file whose
+// frontmatter name is the skill id. Failures in agent selection,
 // a root that refuses writes, and a foreign copy are coded errors that
 // clikit's fault package turns into error payloads; every other error is
 // returned unchanged.
