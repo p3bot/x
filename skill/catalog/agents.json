@@ -1,0 +1,567 @@
+{
+    "agents": {
+        "agy": {
+            "name": "Antigravity CLI",
+            "bin": "agy",
+            "description": "Google's terminal-based AI coding agent, successor to Gemini CLI.",
+            "config": {
+                "global": "~/.gemini/antigravity-cli",
+                "local": ".agents"
+            },
+            "skills": {
+                "global": {
+                    "native": "~/.gemini/antigravity-cli/skills"
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "alternatives": [
+                        ".claude/skills",
+                        ".opencode/skills"
+                    ]
+                }
+            },
+            "agnostic": false,
+            "provider": [
+                "google"
+            ],
+            "homepage": "https://github.com/google-antigravity/antigravity-cli"
+        },
+        "aider": {
+            "name": "Aider",
+            "bin": "aider",
+            "description": "AI pair programming in the terminal.",
+            "config": {
+                "global": "~/.aider"
+            },
+            "agnostic": true,
+            "homepage": "https://github.com/Aider-AI/aider"
+        },
+        "amp": {
+            "name": "Amp",
+            "bin": "amp",
+            "description": "Frontier multi-model AI coding agent for the terminal.",
+            "config": {
+                "global": "~/.config/amp",
+                "local": ".amp"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.config/amp/skills",
+                    "alternatives": [
+                        "~/.config/agents/skills",
+                        "~/.claude/skills"
+                    ]
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "alternatives": [
+                        ".claude/skills"
+                    ]
+                }
+            },
+            "agnostic": true,
+            "homepage": "https://ampcode.com/"
+        },
+        "augment": {
+            "name": "Auggie CLI",
+            "bin": "auggie",
+            "description": "Augment Code's agentic coding CLI for interactive and automated terminal workflows.",
+            "config": {
+                "global": "~/.augment",
+                "local": ".augment"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.augment/skills",
+                    "alternatives": [
+                        "~/.claude/skills"
+                    ]
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "native": ".augment/skills",
+                    "alternatives": [
+                        ".claude/skills"
+                    ]
+                }
+            },
+            "agnostic": true,
+            "homepage": "https://augmentcode.com"
+        },
+        "claude-code": {
+            "name": "Claude Code",
+            "bin": "claude",
+            "description": "Anthropic's agentic coding tool that runs in the terminal.",
+            "config": {
+                "global": "~/.claude",
+                "local": ".claude"
+            },
+            "skills": {
+                "global": {
+                    "native": "~/.claude/skills"
+                },
+                "local": {
+                    "native": ".claude/skills"
+                }
+            },
+            "agnostic": false,
+            "provider": [
+                "anthropic"
+            ],
+            "homepage": "https://github.com/anthropics/claude-code"
+        },
+        "cline": {
+            "name": "Cline CLI",
+            "bin": "cline",
+            "description": "Open-source AI coding agent for the terminal with Plan/Act modes and multi-provider support.",
+            "config": {
+                "global": "~/.cline",
+                "local": ".cline"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.cline/skills"
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "native": ".cline/skills",
+                    "alternatives": [
+                        ".clinerules/skills"
+                    ]
+                }
+            },
+            "agnostic": true,
+            "homepage": "https://cline.bot"
+        },
+        "codewhale": {
+            "name": "Codewhale",
+            "bin": "codewhale",
+            "description": "Open-source, provider-agnostic terminal coding agent.",
+            "config": {
+                "global": "~/.codewhale",
+                "local": ".codewhale"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.codewhale/skills",
+                    "alternatives": [
+                        "~/.claude/skills",
+                        "~/.deepseek/skills"
+                    ]
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "native": ".codewhale/skills",
+                    "alternatives": [
+                        "skills",
+                        ".opencode/skills",
+                        ".claude/skills",
+                        ".cursor/skills"
+                    ]
+                }
+            },
+            "agnostic": true,
+            "homepage": "https://github.com/Hmbown/CodeWhale"
+        },
+        "codex": {
+            "name": "Codex CLI",
+            "bin": "codex",
+            "description": "OpenAI's coding agent that runs in the terminal.",
+            "config": {
+                "global": "~/.codex",
+                "local": ".codex"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.codex/skills"
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "native": ".codex/skills"
+                }
+            },
+            "agnostic": false,
+            "provider": [
+                "openai"
+            ],
+            "homepage": "https://github.com/openai/codex"
+        },
+        "copilot": {
+            "name": "GitHub Copilot CLI",
+            "bin": "copilot",
+            "description": "GitHub's agentic coding assistant for the terminal.",
+            "config": {
+                "global": "~/.copilot",
+                "local": ".github"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.copilot/skills"
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "native": ".github/skills",
+                    "alternatives": [
+                        ".claude/skills"
+                    ]
+                }
+            },
+            "agnostic": false,
+            "provider": [
+                "github-copilot"
+            ],
+            "homepage": "https://github.com/github/copilot-cli"
+        },
+        "crush": {
+            "name": "Crush",
+            "bin": "crush",
+            "description": "Charm's multi-model AI coding agent for the terminal.",
+            "config": {
+                "global": "~/.config/crush",
+                "local": ".crush"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.config/crush/skills",
+                    "alternatives": [
+                        "~/.config/agents/skills",
+                        "~/.claude/skills"
+                    ]
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "native": ".crush/skills",
+                    "alternatives": [
+                        ".claude/skills",
+                        ".cursor/skills"
+                    ]
+                }
+            },
+            "agnostic": true,
+            "homepage": "https://github.com/charmbracelet/crush"
+        },
+        "forge": {
+            "name": "ForgeCode",
+            "bin": "forge",
+            "description": "Multi-provider terminal coding harness with interactive TUI and Zsh integration.",
+            "config": {
+                "global": "~/.forge",
+                "local": ".forge"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.forge/skills"
+                },
+                "local": {
+                    "native": ".forge/skills"
+                }
+            },
+            "agnostic": true,
+            "homepage": "https://github.com/antinomyhq/forgecode"
+        },
+        "goose": {
+            "name": "goose",
+            "bin": "goose",
+            "description": "Open-source AI agent with desktop app, CLI, and API for code and workflows.",
+            "config": {
+                "global": "~/.config/goose"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.config/goose/skills",
+                    "alternatives": [
+                        "~/.claude/skills",
+                        "~/.config/agents/skills"
+                    ]
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "native": ".goose/skills",
+                    "alternatives": [
+                        ".claude/skills"
+                    ]
+                }
+            },
+            "agnostic": true,
+            "homepage": "https://github.com/aaif-goose/goose"
+        },
+        "kilo": {
+            "name": "Kilo Code",
+            "bin": "kilo",
+            "description": "Open-source multi-model AI coding agent for the terminal.",
+            "config": {
+                "global": "~/.config/kilo",
+                "local": ".kilo"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.config/kilo/skills",
+                    "alternatives": [
+                        "~/.config/kilo/skill",
+                        "~/.claude/skills"
+                    ]
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "native": ".kilo/skills",
+                    "alternatives": [
+                        ".kilo/skill",
+                        ".claude/skills"
+                    ]
+                }
+            },
+            "agnostic": false,
+            "provider": [
+                "kilo"
+            ],
+            "homepage": "https://kilo.ai/"
+        },
+        "kimi-code": {
+            "name": "Kimi Code CLI",
+            "bin": "kimi",
+            "description": "Moonshot AI's terminal AI coding agent with Kimi models and multi-provider support.",
+            "config": {
+                "global": "~/.kimi-code",
+                "local": ".kimi-code"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.kimi-code/skills"
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "native": ".kimi-code/skills"
+                }
+            },
+            "agnostic": false,
+            "provider": [
+                "kimi-for-coding"
+            ],
+            "homepage": "https://github.com/MoonshotAI/kimi-code"
+        },
+        "kiro": {
+            "name": "Kiro CLI",
+            "bin": "kiro-cli",
+            "description": "AWS agentic coding CLI for terminal workflows, custom agents, and deployment pipelines.",
+            "config": {
+                "global": "~/.kiro",
+                "local": ".kiro"
+            },
+            "skills": {
+                "global": {
+                    "native": "~/.kiro/skills"
+                },
+                "local": {
+                    "native": ".kiro/skills"
+                }
+            },
+            "agnostic": true,
+            "homepage": "https://kiro.dev"
+        },
+        "grok": {
+            "name": "Grok",
+            "bin": "grok",
+            "description": "xAI's terminal-based AI coding assistant and agentic harness.",
+            "config": {
+                "global": "~/.grok",
+                "local": ".grok"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.grok/skills",
+                    "alternatives": [
+                        "~/.claude/skills",
+                        "~/.cursor/skills"
+                    ]
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "native": ".grok/skills",
+                    "alternatives": [
+                        ".claude/skills",
+                        ".cursor/skills"
+                    ]
+                }
+            },
+            "agnostic": false,
+            "provider": [
+                "xai"
+            ],
+            "homepage": "https://x.ai/cli"
+        },
+        "hermes": {
+            "name": "Hermes Agent",
+            "bin": "hermes",
+            "description": "Self-improving multi-platform AI agent with terminal CLI/TUI and a skills learning loop.",
+            "config": {
+                "global": "~/.hermes"
+            },
+            "skills": {
+                "global": {
+                    "native": "~/.hermes/skills"
+                }
+            },
+            "agnostic": true,
+            "homepage": "https://github.com/NousResearch/hermes-agent"
+        },
+        "opencode": {
+            "name": "opencode",
+            "bin": "opencode",
+            "description": "Open-source, provider-agnostic AI coding agent for the terminal.",
+            "config": {
+                "global": "~/.config/opencode",
+                "local": ".opencode"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "alternatives": [
+                        "~/.claude/skills"
+                    ]
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "native": ".opencode/skills",
+                    "alternatives": [
+                        ".claude/skills"
+                    ]
+                }
+            },
+            "agnostic": true,
+            "homepage": "https://opencode.ai"
+        },
+        "open-interpreter": {
+            "name": "Open Interpreter",
+            "bin": "interpreter",
+            "description": "Terminal coding agent for low-cost and open models, built on the Codex CLI surface.",
+            "config": {
+                "global": "~/.openinterpreter",
+                "local": ".openinterpreter"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.openinterpreter/skills"
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "native": ".openinterpreter/skills"
+                }
+            },
+            "agnostic": true,
+            "homepage": "https://github.com/openinterpreter/openinterpreter"
+        },
+        "openclaw": {
+            "name": "OpenClaw",
+            "bin": "openclaw",
+            "description": "Local-first multi-channel personal AI assistant gateway with CLI, TUI, and skills.",
+            "config": {
+                "global": "~/.openclaw"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.openclaw/skills",
+                    "alternatives": [
+                        "~/.openclaw/workspace/skills",
+                        "~/.openclaw/workspace/.agents/skills"
+                    ]
+                }
+            },
+            "agnostic": true,
+            "homepage": "https://github.com/openclaw/openclaw"
+        },
+        "openhands": {
+            "name": "OpenHands",
+            "bin": "openhands",
+            "description": "Open-source multi-model AI coding agent for the terminal.",
+            "config": {
+                "global": "~/.openhands",
+                "local": ".openhands"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.openhands/skills",
+                    "alternatives": [
+                        "~/.openhands/microagents"
+                    ]
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "native": ".openhands/skills",
+                    "alternatives": [
+                        ".openhands/microagents"
+                    ]
+                }
+            },
+            "agnostic": true,
+            "homepage": "https://github.com/OpenHands/OpenHands-CLI"
+        },
+        "pi": {
+            "name": "Pi",
+            "bin": "pi",
+            "description": "Minimal terminal coding agent harness with extensions and skills.",
+            "config": {
+                "global": "~/.pi",
+                "local": ".pi"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.pi/agent/skills"
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "native": ".pi/skills"
+                }
+            },
+            "agnostic": true,
+            "homepage": "https://pi.dev"
+        },
+        "plandex": {
+            "name": "Plandex",
+            "bin": "plandex",
+            "description": "Terminal AI coding agent for large multi-file tasks and real-world projects.",
+            "config": {
+                "global": "~/.plandex-home-v2",
+                "local": ".plandex-v2"
+            },
+            "agnostic": true,
+            "homepage": "https://plandex.ai"
+        },
+        "qwen-code": {
+            "name": "Qwen Code",
+            "bin": "qwen",
+            "description": "Open-source multi-protocol AI coding agent for the terminal.",
+            "config": {
+                "global": "~/.qwen",
+                "local": ".qwen"
+            },
+            "skills": {
+                "global": {
+                    "agents": "~/.agents/skills",
+                    "native": "~/.qwen/skills"
+                },
+                "local": {
+                    "agents": ".agents/skills",
+                    "native": ".qwen/skills"
+                }
+            },
+            "agnostic": true,
+            "homepage": "https://github.com/QwenLM/qwen-code"
+        }
+    }
+}

@@ -7,17 +7,17 @@ Multi-module Go repository of library modules imported by the p3bot CLIs. Librar
 | Path | Contents |
 | --- | --- |
 | `clikit/` | Module `github.com/p3bot/x/clikit`: packages `fault`, `mode`, `output`, `interrupt`, `duration`, `version`, `xdg`, `atomicfile` |
-| `skill/` | Module `github.com/p3bot/x/skill` (not yet created) |
+| `skill/` | Module `github.com/p3bot/x/skill`: package `catalog` (agent catalog and detection); the lifecycle package at the module root is not yet built |
 | `.golangci.yml` | golangci-lint v2 config shared by every module |
 
 There is no module at the repository root. Each module declares `go 1.27`. `go.work` is gitignored; never commit one.
 
 ## Commands
 
-There is no hosted CI; run all of these before a commit or a tag. Run from a module directory, with the workspace off so the module's own `go.mod` decides versions:
+There is no hosted CI; run all of these in every module (`clikit`, `skill`) before a commit or a tag. Run from the module directory, with the workspace off so the module's own `go.mod` decides versions:
 
 ```bash
-cd clikit
+cd clikit   # then again in skill
 GOWORK=off CGO_ENABLED=0 go test ./...
 GOWORK=off go test -race ./...
 GOWORK=off golangci-lint run ./...
@@ -35,6 +35,12 @@ GOWORK=off go mod tidy
 - Payload derivation reads every field from the first error in the chain that implements `Code()`, never from errors further down. Do not change this rule
 
 Implementers satisfy the interfaces structurally, so breaking the contract compiles everywhere and silently turns their errors into `UNKNOWN`.
+
+## Agent catalog
+
+`skill/catalog/agents.json` is the agent catalog and its only source. Edit it by hand; there is no CUE and no generator. It was exported once from agentdex `catalog/agents.cue` with `cue export`. The `catalog` tests enforce the rules agentdex's `schema.cue` enforced, so a bad edit fails `go test`.
+
+Warning: catalog freeze. Until start reads `skill/catalog` instead of the agentdex registry module, do not edit `agents.json` or agentdex `catalog/agents.cue`. They must stay equivalent on every field the schema names, because start reads the registry copy while the skill-shipping CLIs read the embedded one, and the freeze keeps both agreeing on every agent's roots.
 
 ## Tags
 
@@ -54,7 +60,7 @@ No module imports cobra, pflag, agentdex, or any CLI repository. Adding anything
 - Pure Go, no cgo. Must compile for linux, darwin, and windows
 - No package-level mutable state in `output`. A CLI builds one `Output` per invocation
 - `interrupt` holds no package state; `fault.ExitCode` stays the single exit decision `main` makes
-- Injected process state (`mode.Env`, `xdg.Env`) has a hermetic zero value; `ProcessEnv()` returns the running process
+- Injected process state (`mode.Env`, `xdg.Env`, `catalog.Env`) has a hermetic zero value; `ProcessEnv()` returns the running process
 - `atomicfile` never creates directories; the caller (or `xdg.Ensure`) does
 - Text output, error rendering, and field selection get the design and test effort; keep the JSON envelope minimal
 - MPL-2.0. Scoped Commits messages. No `Co-Authored-By` trailers

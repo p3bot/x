@@ -9,7 +9,7 @@ Each module lives in its own directory with its own `go.mod` and is versioned in
 | Module | Import path | Purpose |
 | --- | --- | --- |
 | clikit | `github.com/p3bot/x/clikit` | The tool-agnostic parts of the p3bot CLI design: exit codes and error payloads, runtime modes, and output |
-| skill | `github.com/p3bot/x/skill` | Agent catalog and agent skill install, list, and uninstall (planned) |
+| skill | `github.com/p3bot/x/skill` | The agent catalog and installed-agent detection; agent skill install, list, and uninstall (planned) |
 
 clikit packages:
 
@@ -23,6 +23,14 @@ clikit packages:
 | `clikit/version` | The reported version from a CLI's ldflags value or the module build info, plus the VCS revision and time for diagnostics |
 | `clikit/xdg` | Per-user config, data, state, and cache directories with macOS defaults, and system config lookup across `$XDG_CONFIG_DIRS` |
 | `clikit/atomicfile` | Replace a file through a temp file and rename, so readers never see a partial write |
+
+skill packages:
+
+| Package | What it provides |
+| --- | --- |
+| `skill/catalog` | The known AI coding agents (binary, config directories, skills roots, providers) from an embedded `agents.json`, and detection of which are installed with their paths resolved |
+
+The catalog is `skill/catalog/agents.json`, edited by hand and validated by the package tests. It needs no network, no CUE, and no first-run fetch. While start still reads the agentdex registry catalog, `agents.json` is frozen: it must stay equivalent to agentdex's `catalog/agents.cue`, and neither file is edited.
 
 ## Using a module
 
@@ -67,7 +75,7 @@ Both modules stay on v0 while the first CLIs migrate to them, so their APIs may 
 The modules require Go 1.27. There is no module at the repository root; run commands from a module directory:
 
 ```bash
-cd clikit
+cd clikit   # or skill
 go test ./...
 golangci-lint run ./...
 ```
