@@ -3,6 +3,7 @@ version: "2"
 linters:
   default: standard
   enable:
+    - depguard
     - errorlint
     - exhaustive
     - gocritic
@@ -11,6 +12,46 @@ linters:
     - unconvert
     - unparam
   settings:
+    depguard:
+      # "**/skill/**/*.go" skips files directly in skill/; end each directory pattern with "/**".
+      rules:
+        other:
+          list-mode: strict
+          files:
+            - $all
+            - "!**/clikit/**"
+            - "!**/skill/**"
+          allow:
+            - $gostd
+        clikit:
+          list-mode: strict
+          files:
+            - "**/clikit/**"
+          allow:
+            - $gostd
+            - github.com/fatih/color
+            - golang.org/x/term
+            - github.com/p3bot/x/clikit/
+        skill:
+          list-mode: strict
+          files:
+            - "**/skill/**"
+            - "!$test"
+          allow:
+            - $gostd
+            - github.com/goccy/go-yaml
+            - github.com/p3bot/x/clikit/atomicfile
+            - github.com/p3bot/x/skill
+        skill-test:
+          list-mode: strict
+          files:
+            - "**/skill/**_test.go"
+          allow:
+            - $gostd
+            - github.com/goccy/go-yaml
+            - github.com/p3bot/x/clikit/atomicfile
+            - github.com/p3bot/x/clikit/fault
+            - github.com/p3bot/x/skill
     exhaustive:
       default-signifies-exhaustive: false
 

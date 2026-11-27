@@ -3,10 +3,10 @@
 // interfaces any package can implement to describe its errors.
 //
 // The coded-error interfaces (Coder, Fixer, ValidValuer, RetryAfterer, and
-// ExitCoder) are frozen from clikit/v0.1.0, v0 included. A method is never
+// ExitCoder) are frozen from v0.1.0, v0 included. A method is never
 // renamed, retyped, or merged into another interface, and a new payload
 // property arrives as a new one-method interface. Implementers outside this
-// module satisfy them structurally, so any change would silently stop their
+// package satisfy them structurally, so any change would silently stop their
 // errors matching instead of failing a build.
 package fault
 

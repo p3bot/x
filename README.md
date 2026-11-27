@@ -1,15 +1,15 @@
 # p3bot/x
 
-Open source Go library modules shared by the [p3bot](https://github.com/p3bot) command-line tools. This repository is library only: it ships no binaries.
+Open source Go library packages shared by the [p3bot](https://github.com/p3bot) command-line tools. This repository is library only: it ships no binaries.
 
-## Modules
+## Packages
 
-Each module lives in its own directory with its own `go.mod` and is versioned independently.
+The repository is one Go module, `github.com/p3bot/x`, versioned as a whole. Its packages fall in two groups:
 
-| Module | Import path | Purpose |
+| Group | Import path | Purpose |
 | --- | --- | --- |
-| clikit | `github.com/p3bot/x/clikit` | The tool-agnostic parts of the p3bot CLI design: exit codes and error payloads, runtime modes, and output |
-| skill | `github.com/p3bot/x/skill` | Agent skill install, list, and uninstall for a CLI, on top of the agent catalog and installed-agent detection |
+| clikit | `github.com/p3bot/x/clikit/...` | The tool-agnostic parts of the p3bot CLI design: exit codes and error payloads, runtime modes, and output |
+| skill | `github.com/p3bot/x/skill/...` | Agent skill install, list, and uninstall for a CLI, on top of the agent catalog and installed-agent detection |
 
 clikit packages:
 
@@ -33,12 +33,12 @@ skill packages:
 
 The catalog is `skill/catalog/agents.json`, edited by hand and validated by the package tests. It needs no network, no CUE, and no first-run fetch. While start still reads the agentdex registry catalog, `agents.json` is frozen: it must stay equivalent to agentdex's `catalog/agents.cue`, and neither file is edited.
 
-## Using a module
+## Using the module
 
-Require the module; `@latest` resolves to the newest tagged version (see [Versions and tags](#versions-and-tags) to pin one):
+Require the module; `@latest` resolves to the newest tagged version:
 
 ```bash
-go get github.com/p3bot/x/clikit@latest
+go get github.com/p3bot/x@latest
 ```
 
 A coded error needs no import of clikit. Any error type that implements `Code() string` becomes an error payload, and may add any of `Fix() string`, `ValidValues() []string`, `RetryAfter() string`, and `ExitCode() int`:
@@ -103,26 +103,20 @@ func runSkillInstall(cmd *cobra.Command, args []string) error {
 
 ## Versions and tags
 
-Go resolves a module in a subdirectory from tags prefixed with that directory, so releases are tagged `<module>/vX.Y.Z`:
+Releases are tagged `vX.Y.Z` at the repository root, starting at `v0.1.0`. The `v` is required. From v2 the import paths gain the major version suffix (`github.com/p3bot/x/v2/clikit/fault`).
 
-- `clikit/v0.1.0`
-- `skill/v0.1.0`
-
-The `v` is required; `clikit/0.1.0` is not a module version and the Go toolchain ignores it. From v2 a module's import path gains the major version suffix (`github.com/p3bot/x/clikit/v2`) and its tags stay `clikit/v2.x.y`.
-
-Both modules stay on v0 while the first CLIs migrate to them, so their APIs may still change between minor versions. The coded-error interfaces in `clikit/fault` are the exception: they are frozen from `clikit/v0.1.0`.
+The module stays on v0 while the first CLIs migrate to it, so its APIs may still change between minor versions. The coded-error interfaces in `clikit/fault` are the exception: they are frozen from `v0.1.0`.
 
 ## Developing
 
-The modules require Go 1.27. There is no module at the repository root; run commands from a module directory:
+The module requires Go 1.27. Run commands from the repository root:
 
 ```bash
-cd clikit   # or skill
 go test ./...
 golangci-lint run ./...
 ```
 
-To work on a module and a consumer together, create a `go.work` in a parent directory. `go.work` is ignored by git. Before committing, test each module against the versions its own `go.mod` requires by running with `GOWORK=off`; [AGENTS.md](AGENTS.md) lists the full set of checks.
+To work on x and a consumer together, create a `go.work` in a parent directory. `go.work` is ignored by git. Before committing, test against the versions `go.mod` requires by running with `GOWORK=off`; [AGENTS.md](AGENTS.md) lists the full set of checks.
 
 ## License
 

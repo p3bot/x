@@ -1,9 +1,10 @@
-module github.com/p3bot/x/clikit
+module github.com/p3bot/x
 
 go 1.27
 
 require (
 	github.com/fatih/color v1.19.0
+	github.com/goccy/go-yaml v1.19.2
 	golang.org/x/term v0.48.0
 )
 
