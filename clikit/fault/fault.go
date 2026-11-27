@@ -30,37 +30,81 @@ const (
 	ExitConfig     = 78 // Configuration error (sysexits EX_CONFIG)
 )
 
-// CodeUnknown is the payload code for an error that carries no code.
-const CodeUnknown = "UNKNOWN"
+// Canonical error codes, verbatim from the p3bot CLI design. Each has a fixed
+// exit code and transient value in the canonical table; any other code is a
+// domain code that sets its own exit code.
+const (
+	CodeInvalidArgument    = "INVALID_ARGUMENT"    // Unknown command or flag, malformed flag value, or wrong argument count
+	CodeInputRequired      = "INPUT_REQUIRED"      // Required flag or argument missing with interactive mode off
+	CodeEnvRequired        = "ENV_REQUIRED"        // Required environment variable unset
+	CodeOutputRequired     = "OUTPUT_REQUIRED"     // Binary output under --json without --output
+	CodeInvalidFields      = "INVALID_FIELDS"      // Unknown --fields name; valid values list the field set
+	CodeInvalidColor       = "INVALID_COLOR"       // --color outside auto, always, never
+	CodeBadRequest         = "BAD_REQUEST"         // Upstream rejected the request as malformed
+	CodeAgentUnknown       = "AGENT_UNKNOWN"       // A skill command named an agent the catalog does not know
+	CodeNoSkillsConcept    = "NO_SKILLS_CONCEPT"   // Named agent has no skills directory
+	CodeNoSkillsRoot       = "NO_SKILLS_ROOT"      // No writable skills root for the target set
+	CodeNoAgents           = "NO_AGENTS"           // No installed agent has a skills concept
+	CodeNotFound           = "NOT_FOUND"           // Resource does not exist
+	CodeUnauthenticated    = "UNAUTHENTICATED"     // No credentials available
+	CodeAuthExpired        = "AUTH_EXPIRED"        // Credentials present but expired or revoked
+	CodePermissionDenied   = "PERMISSION_DENIED"   // Authenticated but not allowed
+	CodeConflict           = "CONFLICT"            // Resource state prevents the operation
+	CodeCursorInvalid      = "CURSOR_INVALID"      // Pagination cursor invalid, expired, or bound to another query
+	CodeRateLimited        = "RATE_LIMITED"        // Upstream quota hit; retry after when known
+	CodeUpstreamError      = "UPSTREAM_ERROR"      // Upstream failed transiently (timeout, unavailable, 5xx)
+	CodeWaitTimeout        = "WAIT_TIMEOUT"        // --wait reached --timeout; the job ID stays in the response
+	CodeCatalogUnavailable = "CATALOG_UNAVAILABLE" // Agent catalog could not be loaded
+	CodeUnknown            = "UNKNOWN"             // Failure the CLI could not classify; also the code of an error that carries none
+	CodeUpstreamRejected   = "UPSTREAM_REJECTED"   // Upstream refused the request for a reason not covered above
+	CodeCatalogInvalid     = "CATALOG_INVALID"     // Agent catalog loaded but failed validation
+	CodeConfigInvalid      = "CONFIG_INVALID"      // Config file, profile store, or CLI-owned env var is malformed
+)
 
-// canonicalExit is the canonical code table, verbatim. A domain code must not
-// appear here, and warning codes never do.
+// Canonical warning codes, verbatim from the p3bot CLI design. A warning never
+// changes the exit code of the success it accompanies.
+const (
+	WarningAlreadyDeleted  = "ALREADY_DELETED"  // delete of an already-deleted resource
+	WarningFlagDeprecated  = "FLAG_DEPRECATED"  // A deprecated flag was used; fix shows its replacement
+	WarningDeprecatedField = "DEPRECATED_FIELD" // An envelope field will be removed or renamed; fix shows the new shape
+)
+
+// canonicalExit is the canonical code table. A domain code must not appear
+// here, and warning codes never do.
 var canonicalExit = map[string]int{
-	"INVALID_ARGUMENT":    ExitUsage,
-	"INPUT_REQUIRED":      ExitUsage,
-	"ENV_REQUIRED":        ExitUsage,
-	"OUTPUT_REQUIRED":     ExitUsage,
-	"INVALID_FIELDS":      ExitUsage,
-	"INVALID_COLOR":       ExitUsage,
-	"BAD_REQUEST":         ExitUsage,
-	"AGENT_UNKNOWN":       ExitUsage,
-	"NO_SKILLS_CONCEPT":   ExitUsage,
-	"NO_SKILLS_ROOT":      ExitUsage,
-	"NO_AGENTS":           ExitUsage,
-	"NOT_FOUND":           ExitNotFound,
-	"UNAUTHENTICATED":     ExitPermission,
-	"AUTH_EXPIRED":        ExitPermission,
-	"PERMISSION_DENIED":   ExitPermission,
-	"CONFLICT":            ExitConflict,
-	"CURSOR_INVALID":      ExitConflict,
-	"RATE_LIMITED":        ExitTransient,
-	"UPSTREAM_ERROR":      ExitTransient,
-	"WAIT_TIMEOUT":        ExitTransient,
-	"CATALOG_UNAVAILABLE": ExitTransient,
-	CodeUnknown:           ExitFailure,
-	"UPSTREAM_REJECTED":   ExitFailure,
-	"CATALOG_INVALID":     ExitFailure,
-	"CONFIG_INVALID":      ExitConfig,
+	CodeInvalidArgument:    ExitUsage,
+	CodeInputRequired:      ExitUsage,
+	CodeEnvRequired:        ExitUsage,
+	CodeOutputRequired:     ExitUsage,
+	CodeInvalidFields:      ExitUsage,
+	CodeInvalidColor:       ExitUsage,
+	CodeBadRequest:         ExitUsage,
+	CodeAgentUnknown:       ExitUsage,
+	CodeNoSkillsConcept:    ExitUsage,
+	CodeNoSkillsRoot:       ExitUsage,
+	CodeNoAgents:           ExitUsage,
+	CodeNotFound:           ExitNotFound,
+	CodeUnauthenticated:    ExitPermission,
+	CodeAuthExpired:        ExitPermission,
+	CodePermissionDenied:   ExitPermission,
+	CodeConflict:           ExitConflict,
+	CodeCursorInvalid:      ExitConflict,
+	CodeRateLimited:        ExitTransient,
+	CodeUpstreamError:      ExitTransient,
+	CodeWaitTimeout:        ExitTransient,
+	CodeCatalogUnavailable: ExitTransient,
+	CodeUnknown:            ExitFailure,
+	CodeUpstreamRejected:   ExitFailure,
+	CodeCatalogInvalid:     ExitFailure,
+	CodeConfigInvalid:      ExitConfig,
+}
+
+// IsCanonical reports whether code is in the canonical table, and so takes its
+// exit code from the table whatever ExitCode its error reports. A CLI's tests
+// use it to check that none of its domain codes shadows a canonical one.
+func IsCanonical(code string) bool {
+	_, ok := canonicalExit[code]
+	return ok
 }
 
 // Coder is implemented by an error that carries a payload code. The first

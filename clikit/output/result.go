@@ -60,7 +60,7 @@ func SelectFields(requested, known []string) (Selection, error) {
 		if len(unknown) > 1 {
 			label = "unknown fields: "
 		}
-		return Selection{}, fault.New("INVALID_FIELDS",
+		return Selection{}, fault.New(fault.CodeInvalidFields,
 			label+strings.Join(unknown, ", "),
 			"rerun with --fields set to a comma-separated list of the accepted fields",
 		).WithValidValues(known...)

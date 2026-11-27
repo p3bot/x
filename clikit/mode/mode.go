@@ -78,7 +78,7 @@ func (e Env) Bool(name string) (bool, error) {
 	case "1", "true", "yes":
 		return true, nil
 	default:
-		return false, fault.New("CONFIG_INVALID",
+		return false, fault.New(fault.CodeConfigInvalid,
 			name+" has invalid value (expected one of: 1, 0, true, false, yes, no)",
 			"unset "+name+" or set it to 1/true/yes/0/false/no",
 		).WithValidValues("1", "0", "true", "false", "yes", "no")
@@ -163,7 +163,7 @@ func validateColor(cli, value string) error {
 	case "", ColorAuto, ColorAlways, ColorNever:
 		return nil
 	default:
-		return fault.New("INVALID_COLOR",
+		return fault.New(fault.CodeInvalidColor,
 			"--color must be one of: auto, always, never",
 			cli+" --color=auto",
 		).WithValidValues(ColorAuto, ColorAlways, ColorNever)

@@ -140,7 +140,7 @@ func (d Dirs) home(t tier) (string, error) {
 	if d.env.GOOS == "windows" {
 		homeVar = "USERPROFILE"
 	}
-	return "", fault.New("CONFIG_INVALID",
+	return "", fault.New(fault.CodeConfigInvalid,
 		fmt.Sprintf("cannot locate the %s directory: %v", t.name, err),
 		fmt.Sprintf("set %s to your home directory, or set %s to an absolute path", homeVar, t.xdgEnv),
 	).WithCause(err)

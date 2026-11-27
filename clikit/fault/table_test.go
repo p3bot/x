@@ -49,3 +49,32 @@ func TestCanonicalTable(t *testing.T) {
 		}
 	}
 }
+
+func TestIsCanonical(t *testing.T) {
+	tests := []struct {
+		code string
+		want bool
+	}{
+		{CodeInvalidArgument, true},
+		{CodeConfigInvalid, true},
+		{CodeUnknown, true},
+		{"TIMEOUT", false},
+		{"invalid_argument", false},
+		{"", false},
+		{WarningAlreadyDeleted, false},
+	}
+	for _, tt := range tests {
+		if got := IsCanonical(tt.code); got != tt.want {
+			t.Errorf("IsCanonical(%q) = %v, want %v", tt.code, got, tt.want)
+		}
+	}
+}
+
+// TestWarningCodes locks the canonical warning codes to the CLI design.
+func TestWarningCodes(t *testing.T) {
+	got := []string{WarningAlreadyDeleted, WarningFlagDeprecated, WarningDeprecatedField}
+	want := []string{"ALREADY_DELETED", "FLAG_DEPRECATED", "DEPRECATED_FIELD"}
+	if !slices.Equal(got, want) {
+		t.Errorf("warning codes = %v, want %v", got, want)
+	}
+}
